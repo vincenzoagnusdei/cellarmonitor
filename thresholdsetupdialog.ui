@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ThresholdSetupDialog</class>
+ <widget class="QDialog" name="ThresholdSetupDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>514</width>
+    <height>318</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Setup Thresholds</string>
+  </property>
+  <widget class="QDialogButtonBox" name="buttonBox">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>240</y>
+     <width>341</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+   </property>
+  </widget>
+  <widget class="QWidget" name="layoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>40</y>
+     <width>211</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <item>
+     <widget class="QLabel" name="lblTempMin">
+      <property name="text">
+       <string>Min</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="lblTempMax">
+      <property name="text">
+       <string>Max</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="layoutWidget_2">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>110</y>
+     <width>331</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <widget class="QLabel" name="lblHumidity">
+      <property name="text">
+       <string>Humidity</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QSpinBox" name="spinBoxHumMin">
+      <property name="minimum">
+       <number>5</number>
+      </property>
+      <property name="maximum">
+       <number>15</number>
+      </property>
+      <property name="value">
+       <number>15</number>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QSpinBox" name="spinBoxHumMax">
+      <property name="minimum">
+       <number>16</number>
+      </property>
+      <property name="maximum">
+       <number>35</number>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="layoutWidget_3">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>70</y>
+     <width>331</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QLabel" name="lblTemperature">
+      <property name="text">
+       <string>Temperature</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QSpinBox" name="spinBoxTempMin">
+      <property name="minimum">
+       <number>5</number>
+      </property>
+      <property name="maximum">
+       <number>15</number>
+      </property>
+      <property name="value">
+       <number>15</number>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QSpinBox" name="spinBoxTempMax">
+      <property name="minimum">
+       <number>16</number>
+      </property>
+      <property name="maximum">
+       <number>35</number>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="layoutWidget_4">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>150</y>
+     <width>331</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_4">
+    <item>
+     <widget class="QLabel" name="lblLuminosity">
+      <property name="text">
+       <string>Luminosity</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QSpinBox" name="spinBoxLumMin">
+      <property name="minimum">
+       <number>5</number>
+      </property>
+      <property name="maximum">
+       <number>15</number>
+      </property>
+      <property name="value">
+       <number>15</number>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QSpinBox" name="spinBoxLumMax">
+      <property name="minimum">
+       <number>16</number>
+      </property>
+      <property name="maximum">
+       <number>35</number>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QLabel" name="lblTIme">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>40</y>
+     <width>81</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Time (min)</string>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="spinBoxTempTime">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>70</y>
+     <width>61</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="minimum">
+    <number>1</number>
+   </property>
+   <property name="maximum">
+    <number>120</number>
+   </property>
+   <property name="value">
+    <number>60</number>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="spinBoxHumTime">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>110</y>
+     <width>61</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="minimum">
+    <number>1</number>
+   </property>
+   <property name="maximum">
+    <number>120</number>
+   </property>
+   <property name="value">
+    <number>60</number>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="spinBoxLumTime">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>150</y>
+     <width>61</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="minimum">
+    <number>1</number>
+   </property>
+   <property name="maximum">
+    <number>120</number>
+   </property>
+   <property name="value">
+    <number>60</number>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>ThresholdSetupDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>ThresholdSetupDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
