@@ -49,10 +49,17 @@
     </property>
     <addaction name="actionDisplay"/>
    </widget>
+   <widget class="QMenu" name="menuMonitor">
+    <property name="title">
+     <string>Monitor</string>
+    </property>
+    <addaction name="actionStatus"/>
+   </widget>
    <addaction name="menuModule"/>
    <addaction name="menuData"/>
    <addaction name="menuThreshold"/>
    <addaction name="menuAlarm"/>
+   <addaction name="menuMonitor"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -86,6 +93,11 @@
   <action name="actionDisplay">
    <property name="text">
     <string>Display</string>
+   </property>
+  </action>
+  <action name="actionStatus">
+   <property name="text">
+    <string>Status</string>
    </property>
   </action>
  </widget>

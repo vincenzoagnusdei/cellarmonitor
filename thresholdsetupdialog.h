@@ -13,20 +13,23 @@ class ThresholdSetupDialog : public QDialog
     Q_OBJECT
 
 public:
+    enum measuring_point {hummin, hummax, humtime,lummin, lummax, lumtime, tempmin, tempmax, temptime };
     explicit ThresholdSetupDialog(QWidget *parent = 0);
     ~ThresholdSetupDialog();
-    int initThresholds();
+
 
 private slots:
     void on_buttonBox_accepted();
 
     void on_ThresholdSetupDialog_finished(int result);
 
-
+signals:
+    void thresholdsChanged();
 
 private:
     Ui::ThresholdSetupDialog *ui;
     FileHandler mFH;
+    int initThresholds();
 
 
 };

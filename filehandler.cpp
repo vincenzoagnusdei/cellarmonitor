@@ -6,6 +6,7 @@ using namespace std;
 
 
 const QString FileHandler::THRESHOLDS_FILE = "thresholds.txt";
+const QString FileHandler::MONITOR_STATUS_FILE = "monitorstatus.txt";
 
 FileHandler::FileHandler()
 {
@@ -53,6 +54,51 @@ int FileHandler::readThresholds(QStringList *vals)
       }
 
         *vals = thresholds.split(',');
+
+     file.close();
+
+    return 1;
+
+}
+
+int FileHandler::writeMonitorStatus(QString *vals)
+{
+
+
+    QFile file(FileHandler::MONITOR_STATUS_FILE);        
+    if (!file.open(QFile::WriteOnly | QFile::Truncate | QFile::Text))
+    {
+        qDebug() << "Error writing file " << FileHandler::MONITOR_STATUS_FILE;
+        return -1;
+    }
+
+
+        QTextStream datastream(&file);
+        datastream << *vals;
+        file.flush();
+        file.close();
+
+     return 1;
+
+}
+
+
+int FileHandler::readMonitorStatus(QStringList *vals)
+{
+    QString monitorstatus;
+
+    QFile file(FileHandler::MONITOR_STATUS_FILE);
+      if (!file.open(QFile::ReadOnly ))
+          return -1;
+
+      QTextStream in(&file);
+      while (!in.atEnd()) {
+          monitorstatus = in.readAll();
+
+      }
+
+      *vals = monitorstatus.split(',');
+      file.close();
 
     return 1;
 

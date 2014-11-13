@@ -65,19 +65,17 @@ int ThresholdSetupDialog::initThresholds()
     else
     {
 
+    ui->spinBoxHumMin->setValue((vals.at(hummin)).toInt());
+    ui->spinBoxHumMax->setValue((vals.at(hummax)).toInt());
+    ui->spinBoxHumTime->setValue((vals.at(humtime)).toInt());
 
+    ui->spinBoxLumMin->setValue((vals.at(lummin)).toInt());
+    ui->spinBoxLumMax->setValue(vals.at(lummax).toInt());
+    ui->spinBoxLumTime->setValue(vals.at(lumtime).toInt());
 
-    ui->spinBoxHumMin->setValue((vals.at(0)).toInt());
-    ui->spinBoxHumMax->setValue((vals.at(1)).toInt());
-    ui->spinBoxHumTime->setValue((vals.at(2)).toInt());
-
-    ui->spinBoxLumMin->setValue((vals.at(3)).toInt());
-    ui->spinBoxLumMax->setValue(vals.at(4).toInt());
-    ui->spinBoxLumTime->setValue(vals.at(5).toInt());
-
-    ui->spinBoxTempMin->setValue((vals.at(6)).toInt());
-    ui->spinBoxTempMax->setValue((vals.at(7)).toInt());
-    ui->spinBoxTempTime->setValue((vals.at(8)).toInt());
+    ui->spinBoxTempMin->setValue((vals.at(tempmin)).toInt());
+    ui->spinBoxTempMax->setValue((vals.at(tempmax)).toInt());
+    ui->spinBoxTempTime->setValue((vals.at(temptime)).toInt());
     }
 
     return 1;
@@ -86,6 +84,7 @@ int ThresholdSetupDialog::initThresholds()
 void ThresholdSetupDialog::on_ThresholdSetupDialog_finished(int result)
 {
     qDebug() << "on_ThresholdSetupDialog_finished";
+    emit thresholdsChanged();
 }
 
 

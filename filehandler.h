@@ -15,13 +15,16 @@ class FileHandler
 
 public:
 
-    static const QString THRESHOLDS_FILE;
+    static const QString THRESHOLDS_FILE;    
+    static const QString MONITOR_STATUS_FILE;
 
     FileHandler();
     ~FileHandler();
 
     int writeThresholds(QString *thresholds=NULL);
-    int readThresholds(QStringList *vals);
+    int readThresholds(QStringList *vals);    
+    int readMonitorStatus(QStringList *vals);
+    int writeMonitorStatus(QString *data);
 
 
 
