@@ -29,7 +29,7 @@ private:
     Ui::DialogMonitorControl *ui;
     FileHandler mFH;
     int initMonitorStatus();
-    void checkDiskSpaceForLogEvent();
+
 };
 
 #endif // DIALOGMONITORCONTROL_H

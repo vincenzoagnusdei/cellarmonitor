@@ -3,6 +3,7 @@
 
 #include <QThread>
 #include <QString>
+#include "eventlogger.h"
 
 class MeasuringPointThread : public QThread
 {
@@ -18,9 +19,9 @@ protected:
     void run();
 
 signals:
-    void minThresholdCrossed(float, float, QString);
-    void maxThresholdCrossed(float, float, QString);
-    void currentValue(float, QString);
+    void minThresholdCrossed(float, float, QString, EventLogger::EVENT_TYPE_ENUM);
+    void maxThresholdCrossed(float, float, QString, EventLogger::EVENT_TYPE_ENUM);
+    void currentValue(float, QString, EventLogger::EVENT_TYPE_ENUM);
 
 public slots:
 

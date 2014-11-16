@@ -3,7 +3,6 @@
 #include <QDebug>
 
 
-#include <QSystemInfo>
 
 
 
@@ -110,20 +109,3 @@ void DialogMonitorControl::on_buttonBox_accepted()
         emit monitorControlChanged();
 }
 
-void DialogMonitorControl::checkDiskSpaceForLogEvent()
-{
-
-    QtMobility::QSystemStorageInfo sysStrgInfo;
-    QStringList drives = sysStrgInfo.logicalDrives();
-
-    foreach (QString drive, drives)
-    {
-        qDebug() << sysStrgInfo.availableDiskSpace(drive);
-        qDebug() << sysStrgInfo.totalDiskSpace(drive);
-    }
-
-
-
-
-
-}

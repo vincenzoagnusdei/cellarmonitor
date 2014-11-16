@@ -7,6 +7,7 @@
 #include "filehandler.h"
 #include "thresholdsetupdialog.h"
 #include "eventlogger.h"
+#include "alarmdialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -28,12 +29,16 @@ private slots:
     void on_actionBackup_triggered();
     void on_actionStatus_triggered();
 
+    void on_actionDisplay_triggered();
+
 private:
     Ui::MainWindow *ui;
     MeasuringPointThread *mTempMPThread=NULL;
     MeasuringPointThread *mLumMPThread=NULL;
     MeasuringPointThread *mHumMPThread=NULL;
     ThresholdSetupDialog mThresholdDialog;
+    AlarmDialog *mAlarmDialog;
+
     EventLogger mEventLogger;
     FileHandler mFH;
     void startThreads();
@@ -42,9 +47,6 @@ private:
     void startMonitoring();
 
 public slots:
-    void onMinThresholdCrossed(float,float,QString);
-    void onMaxThresholdCrossed(float,float,QString);
-    void onCurrentValue(float,QString);
     void onStartMonitoringChanged();
     void onThresholdsChanged();
 

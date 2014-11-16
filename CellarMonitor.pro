@@ -11,8 +11,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = CellarMonitor
 TEMPLATE = app
 
-CONFIG += mobility
-MOBILITY += systeminfo
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -21,7 +19,9 @@ SOURCES += main.cpp\
     filehandler.cpp \
     dialogmonitorcontrol.cpp \
     measuringpoint.cpp \
-    eventlogger.cpp
+    eventlogger.cpp \
+    alarmdialog.cpp \
+    temperaturealarmlistmodel.cpp
 
 HEADERS  += mainwindow.h \
     databackupdialog.h \
@@ -29,9 +29,12 @@ HEADERS  += mainwindow.h \
     thresholdsetupdialog.h \
     dialogmonitorcontrol.h \
     measuringpoint.h \
-    eventlogger.h
+    eventlogger.h \
+    alarmdialog.h \
+    temperaturealarmlistmodel.h
 
 FORMS    += mainwindow.ui \
     databackupdialog.ui \
     thresholdsetupdialog.ui \
-    dialogmonitorcontrol.ui
+    dialogmonitorcontrol.ui \
+    alarmdialog.ui

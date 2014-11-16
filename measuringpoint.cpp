@@ -19,7 +19,7 @@ MeasuringPointThread::MeasuringPointThread(QObject *parent, int low, int high) :
 void MeasuringPointThread::run()
 {
     QMutex mutex;
-    int seconds=0;
+    int seconds=2;
 
     do
     {
@@ -34,29 +34,29 @@ void MeasuringPointThread::run()
 
         this->msleep(1000);
         seconds++;
-        if (seconds != 1 && (this->mEmitTime % seconds == 0) && (this->mEmitTime < seconds) )
+        if ((this->mEmitTime % seconds == 0) && (seconds >= this->mEmitTime) )
         {
             int curval = getRandomValue();
-            emit currentValue(curval, this->objectName());
+            emit currentValue(curval, this->objectName(), EventLogger::TEMPERATURE_VAL);
             if (curval < mMinTh)
-                emit minThresholdCrossed(curval, this->mMinTh, this->objectName());
+                emit minThresholdCrossed(curval, this->mMinTh, this->objectName(), EventLogger::TEMPERATURE_TH);
             if (curval>  mMaxTh)
-                emit maxThresholdCrossed(curval, this->mMaxTh, this->objectName());
+                emit maxThresholdCrossed(curval, this->mMaxTh, this->objectName(), EventLogger::TEMPERATURE_TH);
         }
         else
         {
             int curval = getRandomValue();
 
             if (curval < mMinTh)
-                emit minThresholdCrossed(curval, this->mMinTh, this->objectName());
+                emit minThresholdCrossed(curval, this->mMinTh, this->objectName(), EventLogger::TEMPERATURE_TH);
             if (curval>  mMaxTh)
-                emit maxThresholdCrossed(curval, this->mMaxTh, this->objectName());
+                emit maxThresholdCrossed(curval, this->mMaxTh, this->objectName(), EventLogger::TEMPERATURE_TH);
 
         }
 
     } while(!Stop);
 
-    seconds=0;
+    seconds=2;
 
 }
 

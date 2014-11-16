@@ -1,9 +1,9 @@
 #include "filehandler.h"
 #include <iostream>
-using namespace std;
 #include <QDebug>
 #include <QStringList>
 
+using namespace std;
 
 const QString FileHandler::THRESHOLDS_FILE = "thresholds.txt";
 const QString FileHandler::MONITOR_STATUS_FILE = "monitorstatus.txt";

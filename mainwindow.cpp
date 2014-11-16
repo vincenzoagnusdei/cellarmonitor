@@ -8,6 +8,7 @@
 #include "dialogmonitorcontrol.h"
 
 
+
 const QString MainWindow::THREAD_T1 = "T1";
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -21,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete mAlarmDialog;
+    delete mTempMPThread;
 }
 
 void MainWindow::on_actionSetup_triggered()
@@ -33,10 +36,10 @@ void MainWindow::on_actionSetup_triggered()
 
 void MainWindow::on_actionBackup_triggered()
 {
-    DataBackupDialog mDataBackupDialog;
-    mDataBackupDialog.setModal(true);   
-    mDataBackupDialog.setWindowTitle("Data Backup");
-     mDataBackupDialog.exec();
+    DataBackupDialog dataBackupDialog;
+    dataBackupDialog.setModal(true);
+    dataBackupDialog.setWindowTitle("Data Backup");
+    dataBackupDialog.exec();
 }
 
 void MainWindow::on_actionStatus_triggered()
@@ -50,21 +53,14 @@ void MainWindow::on_actionStatus_triggered()
 }
 
 
-void MainWindow::onCurrentValue(float cv, QString sensor)
+void MainWindow::on_actionDisplay_triggered()
 {
+    mAlarmDialog->setModal(true);
+    mAlarmDialog->setWindowTitle("Crossed Thresholds Alarm");
+    mAlarmDialog->exec();
 
-    qDebug() << "currentValue " << cv << " from " << sensor;
 }
 
-void MainWindow::onMaxThresholdCrossed(float vmaxth, float th, QString sensor)
-{
-    qDebug() << "MaxThreshold " << th << " crossed " << vmaxth << " from " << sensor;
-}
-
-void MainWindow::onMinThresholdCrossed(float vminth, float th, QString sensor)
-{
-    qDebug() << "MinThreshold " << th << " crossed " << vminth << " from " << sensor;
-}
 
 
 void MainWindow::onStartMonitoringChanged()
@@ -76,21 +72,19 @@ void MainWindow::onStartMonitoringChanged()
 void MainWindow::init()
 {
 
+   qRegisterMetaType<EventLogger::EVENT_TYPE_ENUM>("EventLogger::EVENT_TYPE_ENUM");
    mTempMPThread = new MeasuringPointThread(this, 0,40);
    mTempMPThread->setObjectName(THREAD_T1);
+   mAlarmDialog = new AlarmDialog(this, mTempMPThread);
 
-   connect(mTempMPThread,SIGNAL(minThresholdCrossed(float,float,QString)), &mEventLogger,
-           SLOT(onMinThresholdCrossed(float,float,QString)));
-   connect(mTempMPThread,SIGNAL(maxThresholdCrossed(float,float,QString)), &mEventLogger,
-                   SLOT(onMaxThresholdCrossed(float,float,QString)));
-   connect(mTempMPThread,SIGNAL(currentValue(float,QString)), &mEventLogger,
-                   SLOT(onCurrentValue(float,QString)));
+   connect(mTempMPThread,SIGNAL(minThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)), &mEventLogger,
+           SLOT(onMinThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)));
+   connect(mTempMPThread,SIGNAL(maxThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)), &mEventLogger,
+                   SLOT(onMaxThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)));
+   connect(mTempMPThread,SIGNAL(currentValue(float,QString,EventLogger::EVENT_TYPE_ENUM)), &mEventLogger,                   SLOT(onCurrentValue(float,QString,EventLogger::EVENT_TYPE_ENUM)));
 
 
-    connect(mTempMPThread, SIGNAL(minThresholdCrossed(float,float,QString)), this, SLOT(onMinThresholdCrossed(float,float,QString)));
-    connect(mTempMPThread, SIGNAL(maxThresholdCrossed(float,float,QString)), this, SLOT(onMaxThresholdCrossed(float,float,QString)));
-    connect(mTempMPThread, SIGNAL(currentValue(float,QString)), this, SLOT(onCurrentValue(float,QString)));
-    connect(&mThresholdDialog, SIGNAL(thresholdsChanged()), this, SLOT(onThresholdsChanged()));
+   connect(&mThresholdDialog, SIGNAL(thresholdsChanged()), this, SLOT(onThresholdsChanged()));
 
     this->startThreads();
 
@@ -145,3 +139,4 @@ void MainWindow::startThreads()
 
 
 }
+
