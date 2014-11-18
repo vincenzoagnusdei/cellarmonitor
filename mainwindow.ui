@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>439</width>
     <height>300</height>
    </rect>
   </property>
@@ -19,7 +19,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>400</width>
+     <width>439</width>
      <height>25</height>
     </rect>
    </property>
@@ -55,11 +55,35 @@
     </property>
     <addaction name="actionStatus"/>
    </widget>
+   <widget class="QMenu" name="menuLog">
+    <property name="title">
+     <string>Log</string>
+    </property>
+    <widget class="QMenu" name="menuThrehshold_Crossed">
+     <property name="title">
+      <string>Threhshold Crossed</string>
+     </property>
+     <addaction name="actionThHumidity"/>
+     <addaction name="actionThLuminosity"/>
+     <addaction name="actionThTemperature"/>
+    </widget>
+    <widget class="QMenu" name="menuValue">
+     <property name="title">
+      <string>Value</string>
+     </property>
+     <addaction name="actionValueLuminosity"/>
+     <addaction name="actionValueHumidity"/>
+     <addaction name="actionValueTemperature"/>
+    </widget>
+    <addaction name="menuValue"/>
+    <addaction name="menuThrehshold_Crossed"/>
+   </widget>
    <addaction name="menuModule"/>
    <addaction name="menuData"/>
    <addaction name="menuThreshold"/>
    <addaction name="menuAlarm"/>
    <addaction name="menuMonitor"/>
+   <addaction name="menuLog"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -98,6 +122,36 @@
   <action name="actionStatus">
    <property name="text">
     <string>Status</string>
+   </property>
+  </action>
+  <action name="actionThHumidity">
+   <property name="text">
+    <string>Humidity</string>
+   </property>
+  </action>
+  <action name="actionThLuminosity">
+   <property name="text">
+    <string>Luminosity</string>
+   </property>
+  </action>
+  <action name="actionThTemperature">
+   <property name="text">
+    <string>Temperature</string>
+   </property>
+  </action>
+  <action name="actionValueLuminosity">
+   <property name="text">
+    <string>Luminosity</string>
+   </property>
+  </action>
+  <action name="actionValueHumidity">
+   <property name="text">
+    <string>Humidity</string>
+   </property>
+  </action>
+  <action name="actionValueTemperature">
+   <property name="text">
+    <string>Temperature</string>
    </property>
   </action>
  </widget>

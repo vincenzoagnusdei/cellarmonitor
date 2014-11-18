@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include <temperaturealarmlistmodel.h>
-#include "measuringpoint.h"
+#include "eventlogger.h"
 
 
 
@@ -16,7 +16,7 @@ class AlarmDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit AlarmDialog(QWidget *parent = 0, MeasuringPointThread *mp=NULL);
+    explicit AlarmDialog(QWidget *parent = 0, EventLogger *evlog=NULL);
 
     ~AlarmDialog();
 
@@ -24,13 +24,10 @@ public:
 private:
     Ui::AlarmDialog *ui;
     TemperatureAlarmListModel *model;
-    MeasuringPointThread *mMPT;
+    EventLogger *mpEventLogger;
 
 public slots:
-    void updateAlarmList()
-    {
 
-    }
 
 };
 

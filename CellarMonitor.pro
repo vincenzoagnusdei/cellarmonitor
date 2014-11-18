@@ -12,6 +12,9 @@ TARGET = CellarMonitor
 TEMPLATE = app
 
 
+target.path = /root/opt/myapp
+INSTALLS += target
+
 SOURCES += main.cpp\
         mainwindow.cpp \
     databackupdialog.cpp \
@@ -21,7 +24,8 @@ SOURCES += main.cpp\
     measuringpoint.cpp \
     eventlogger.cpp \
     alarmdialog.cpp \
-    temperaturealarmlistmodel.cpp
+    temperaturealarmlistmodel.cpp \
+    thresholdlogdialog.cpp
 
 HEADERS  += mainwindow.h \
     databackupdialog.h \
@@ -31,10 +35,12 @@ HEADERS  += mainwindow.h \
     measuringpoint.h \
     eventlogger.h \
     alarmdialog.h \
-    temperaturealarmlistmodel.h
+    temperaturealarmlistmodel.h \
+    thresholdlogdialog.h
 
 FORMS    += mainwindow.ui \
     databackupdialog.ui \
     thresholdsetupdialog.ui \
     dialogmonitorcontrol.ui \
-    alarmdialog.ui
+    alarmdialog.ui \
+    thresholdlogdialog.ui

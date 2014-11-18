@@ -14,10 +14,11 @@ public:
 
 signals:
 
-public slots:
-    void onMinThresholdCrossed(float, float, QString, EventLogger::EVENT_TYPE_ENUM );
-    void onMaxThresholdCrossed(float, float, QString, EventLogger::EVENT_TYPE_ENUM );
-    void onCurrentValue(float, QString , EventLogger::EVENT_TYPE_ENUM );
+public slots:      
+
+    void onTresholdCrossed(QString);
+    /* void currentValue(QString); */
+
 
 private:
     QStringList mAlarmList;

@@ -27,27 +27,30 @@ public:
     static const QString LOG_LUMINOSITY_CURRENT_VALUE_FILE_B;
     static const int LOG_SIZE;
 
-
-
-
     explicit EventLogger(QObject *parent = 0);
     int writeEvent(QString, EVENT_TYPE_ENUM);
+    int readAllEventThresholds(QStringList *, EVENT_TYPE_ENUM);
+
 private:
 
     void trunkateFile(QString filename);
-
     QString getFileName(EVENT_TYPE_ENUM evtype);
-
     QString mLogTemperatureThXFile;
     QString mLogHumidityThXFile;
     QString mLogLuminosityThXFile;
     QString mLogCurrValueTemperatureFile;
     QString mLogCurrValueHumidityFile;
     QString mLogCurrValueLuminosityFile;
-
+    QString prepareAlarmEventForGUI(float, float , QString, EVENT_TYPE_ENUM );
+    QString prepareAlarmEventForFile(float, float, QString, EVENT_TYPE_ENUM);
 
 
 signals:
+
+    void tresholdCrossed(QString);
+    void currentValue(QString);
+
+
 
 
 public slots:

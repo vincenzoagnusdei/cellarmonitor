@@ -3,19 +3,17 @@
 
 
 
-AlarmDialog::AlarmDialog(QWidget *parent, MeasuringPointThread *mp) :
+AlarmDialog::AlarmDialog(QWidget *parent, EventLogger *evlog) :
     QDialog(parent),
     ui(new Ui::AlarmDialog)
 {
-    mMPT = mp;
+    mpEventLogger = evlog;
     ui->setupUi(this);
     model = new TemperatureAlarmListModel(this);
     ui->alarmlistView->setModel(model);
 
-    connect(mp, SIGNAL(minThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)), model,
-            SLOT(onMinThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)));
-    connect(mp, SIGNAL(maxThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)), model,
-            SLOT(onMaxThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)));
+    connect(mpEventLogger, SIGNAL(tresholdCrossed(QString)), model,
+            SLOT(onTresholdCrossed(QString)));
 
 }
 

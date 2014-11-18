@@ -22,15 +22,16 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete mAlarmDialog;
+    if (mAlarmDialog != NULL)
+        delete mAlarmDialog;
     delete mTempMPThread;
 }
 
 void MainWindow::on_actionSetup_triggered()
 {   
-    mThresholdDialog.setModal(true);    
-    mThresholdDialog.setWindowTitle("Setup Threshold");   
-    mThresholdDialog.exec();
+    mThresholdSetupDialog.setModal(true);
+    mThresholdSetupDialog.setWindowTitle("Setup Threshold");
+    mThresholdSetupDialog.exec();
 
 }
 
@@ -75,7 +76,7 @@ void MainWindow::init()
    qRegisterMetaType<EventLogger::EVENT_TYPE_ENUM>("EventLogger::EVENT_TYPE_ENUM");
    mTempMPThread = new MeasuringPointThread(this, 0,40);
    mTempMPThread->setObjectName(THREAD_T1);
-   mAlarmDialog = new AlarmDialog(this, mTempMPThread);
+   mAlarmDialog = new AlarmDialog(this, &mEventLogger);
 
    connect(mTempMPThread,SIGNAL(minThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)), &mEventLogger,
            SLOT(onMinThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)));
@@ -84,7 +85,7 @@ void MainWindow::init()
    connect(mTempMPThread,SIGNAL(currentValue(float,QString,EventLogger::EVENT_TYPE_ENUM)), &mEventLogger,                   SLOT(onCurrentValue(float,QString,EventLogger::EVENT_TYPE_ENUM)));
 
 
-   connect(&mThresholdDialog, SIGNAL(thresholdsChanged()), this, SLOT(onThresholdsChanged()));
+   connect(&mThresholdSetupDialog, SIGNAL(thresholdsChanged()), this, SLOT(onThresholdsChanged()));
 
     this->startThreads();
 
@@ -140,3 +141,12 @@ void MainWindow::startThreads()
 
 }
 
+
+void MainWindow::on_actionThTemperature_triggered()
+{
+    mThresholdLogDialog.init();
+    mThresholdLogDialog.setModal(true);
+    mThresholdLogDialog.setWindowTitle("Event Threshold Log");
+    mThresholdLogDialog.exec();
+
+}

@@ -8,6 +8,7 @@
 #include "thresholdsetupdialog.h"
 #include "eventlogger.h"
 #include "alarmdialog.h"
+#include "thresholdlogdialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -28,22 +29,22 @@ private slots:
     void on_actionSetup_triggered();
     void on_actionBackup_triggered();
     void on_actionStatus_triggered();
-
     void on_actionDisplay_triggered();
+    void on_actionThTemperature_triggered();
 
 private:
     Ui::MainWindow *ui;
     MeasuringPointThread *mTempMPThread=NULL;
     MeasuringPointThread *mLumMPThread=NULL;
     MeasuringPointThread *mHumMPThread=NULL;
-    ThresholdSetupDialog mThresholdDialog;
-    AlarmDialog *mAlarmDialog;
+    ThresholdSetupDialog mThresholdSetupDialog;
+    ThresholdLogDialog mThresholdLogDialog;
+    AlarmDialog *mAlarmDialog=NULL;
+
 
     EventLogger mEventLogger;
     FileHandler mFH;
     void startThreads();
-
-
     void startMonitoring();
 
 public slots:
