@@ -13,6 +13,7 @@ public:
     void setEmitValueTime(int seconds);
     void setMinThreshold(float minth);
     void setMaxThreshold(float maxth);
+    int getValue();
     bool Stop;
 
 protected:

@@ -82,3 +82,8 @@ int MeasuringPointThread::getRandomValue()
 
  return qrand() % ((mHigh + 1) - mLow) + mLow;
 }
+
+ int MeasuringPointThread::getValue()
+ {
+     return this->getRandomValue();
+ }

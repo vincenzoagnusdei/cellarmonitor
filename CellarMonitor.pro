@@ -11,6 +11,9 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = CellarMonitor
 TEMPLATE = app
 
+QMAKE_CXXFLAGS += -std=c99
+
+unix:!macx: LIBS += -lcantcoap
 
 target.path = /root/opt/myapp
 INSTALLS += target
@@ -25,7 +28,9 @@ SOURCES += main.cpp\
     eventlogger.cpp \
     alarmdialog.cpp \
     temperaturealarmlistmodel.cpp \
-    thresholdlogdialog.cpp
+    thresholdlogdialog.cpp \
+    coapserver.cpp \
+    nethelper.c
 
 HEADERS  += mainwindow.h \
     databackupdialog.h \
@@ -36,7 +41,8 @@ HEADERS  += mainwindow.h \
     eventlogger.h \
     alarmdialog.h \
     temperaturealarmlistmodel.h \
-    thresholdlogdialog.h
+    thresholdlogdialog.h \
+    coapserver.h
 
 FORMS    += mainwindow.ui \
     databackupdialog.ui \

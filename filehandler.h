@@ -7,8 +7,6 @@
 
 
 
-
-
 class FileHandler
 {
 
@@ -31,6 +29,8 @@ public:
 private:
 
 
+    QString INIT_MONITOR_STATUS_FILE;
+    QString INIT_THRESHOLDS_FILE;
 
 
 };

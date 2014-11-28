@@ -3,12 +3,14 @@
 
 #include <QMainWindow>
 #include <QString>
+#include "coapserver.h"
 #include "measuringpoint.h"
 #include "filehandler.h"
 #include "thresholdsetupdialog.h"
 #include "eventlogger.h"
 #include "alarmdialog.h"
 #include "thresholdlogdialog.h"
+
 
 namespace Ui {
 class MainWindow;
@@ -23,6 +25,7 @@ public:
     ~MainWindow();
     void init();
     static const QString THREAD_T1;
+    MeasuringPointThread* getTemperatureThreadInstance();
 
 
 private slots:
@@ -34,9 +37,11 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    MeasuringPointThread *mTempMPThread=NULL;
-    MeasuringPointThread *mLumMPThread=NULL;
-    MeasuringPointThread *mHumMPThread=NULL;
+    MeasuringPointThread *mpTempMPThread=NULL;
+    MeasuringPointThread *mpLumMPThread=NULL;
+    MeasuringPointThread *mpHumMPThread=NULL;
+    COAPServer *mpCoapServerThread=NULL;
+
     ThresholdSetupDialog mThresholdSetupDialog;
     ThresholdLogDialog mThresholdLogDialog;
     AlarmDialog *mAlarmDialog=NULL;

@@ -24,7 +24,9 @@ MainWindow::~MainWindow()
     delete ui;
     if (mAlarmDialog != NULL)
         delete mAlarmDialog;
-    delete mTempMPThread;
+    delete mpTempMPThread;
+
+    delete mpCoapServerThread;
 }
 
 void MainWindow::on_actionSetup_triggered()
@@ -74,15 +76,17 @@ void MainWindow::init()
 {
 
    qRegisterMetaType<EventLogger::EVENT_TYPE_ENUM>("EventLogger::EVENT_TYPE_ENUM");
-   mTempMPThread = new MeasuringPointThread(this, 0,40);
-   mTempMPThread->setObjectName(THREAD_T1);
+   mpCoapServerThread = new COAPServer(this);
+   mpTempMPThread = new MeasuringPointThread(this, 0,40);
+   mpTempMPThread->setObjectName(THREAD_T1);
    mAlarmDialog = new AlarmDialog(this, &mEventLogger);
 
-   connect(mTempMPThread,SIGNAL(minThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)), &mEventLogger,
+   connect(mpTempMPThread,SIGNAL(minThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)), &mEventLogger,
            SLOT(onMinThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)));
-   connect(mTempMPThread,SIGNAL(maxThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)), &mEventLogger,
+   connect(mpTempMPThread,SIGNAL(maxThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)), &mEventLogger,
                    SLOT(onMaxThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)));
-   connect(mTempMPThread,SIGNAL(currentValue(float,QString,EventLogger::EVENT_TYPE_ENUM)), &mEventLogger,                   SLOT(onCurrentValue(float,QString,EventLogger::EVENT_TYPE_ENUM)));
+   connect(mpTempMPThread,SIGNAL(currentValue(float,QString,EventLogger::EVENT_TYPE_ENUM)), &mEventLogger,
+           SLOT(onCurrentValue(float,QString,EventLogger::EVENT_TYPE_ENUM)));
 
 
    connect(&mThresholdSetupDialog, SIGNAL(thresholdsChanged()), this, SLOT(onThresholdsChanged()));
@@ -102,24 +106,27 @@ void MainWindow::startThreads()
     QStringList monitorstatus;
     QStringList thresholds;
 
+    mpCoapServerThread->start();
+
+
     if ( mFH.readMonitorStatus(&monitorstatus) == 1)
     {
         if (mFH.readThresholds(&thresholds) == 1)
         {
-            if (monitorstatus.at(DialogMonitorControl::humidity).compare(DialogMonitorControl::ENABLED) == 0)
+            if (monitorstatus.at(DialogMonitorControl::temperature).compare(DialogMonitorControl::ENABLED) == 0)
             {
-                 if (!mTempMPThread->isRunning())
+                 if (!mpTempMPThread->isRunning())
                  {
-                    mTempMPThread->setMinThreshold(thresholds.at(ThresholdSetupDialog::hummin).toFloat());
-                    mTempMPThread->setMaxThreshold(thresholds.at(ThresholdSetupDialog::hummax).toFloat());
-                    mTempMPThread->setEmitValueTime(thresholds.at(ThresholdSetupDialog::humtime).toInt());
-                    mTempMPThread->Stop=false;
-                    mTempMPThread->start();
+                    mpTempMPThread->setMinThreshold(thresholds.at(ThresholdSetupDialog::tempmin).toFloat());
+                    mpTempMPThread->setMaxThreshold(thresholds.at(ThresholdSetupDialog::tempmax).toFloat());
+                    mpTempMPThread->setEmitValueTime(thresholds.at(ThresholdSetupDialog::temptime).toInt());
+                    mpTempMPThread->Stop=false;
+                    mpTempMPThread->start();
                 }
             }
             else
             {
-                mTempMPThread->Stop=true;
+                mpTempMPThread->Stop=true;
             }
 /*
             if (vals.at(luminosity).compare(ENABLED) == 0)
@@ -127,7 +134,7 @@ void MainWindow::startThreads()
 
             }
 
-            if (vals.at(temperature).compare(ENABLED) == 0)
+            if (vals.at(humidity).compare(ENABLED) == 0)
             {
 
             }
@@ -141,6 +148,11 @@ void MainWindow::startThreads()
 
 }
 
+
+MeasuringPointThread* MainWindow::getTemperatureThreadInstance()
+{
+    return mpTempMPThread;
+}
 
 void MainWindow::on_actionThTemperature_triggered()
 {
