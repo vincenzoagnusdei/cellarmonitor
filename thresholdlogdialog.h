@@ -18,8 +18,7 @@ class ThresholdLogDialog : public QDialog
 
 public:
     explicit ThresholdLogDialog(QWidget *parent = 0, EventLogger *evtlogger=NULL);
-    ~ThresholdLogDialog();
-    void init();
+    ~ThresholdLogDialog();    
     static const int COLUMNS;
 
 private:

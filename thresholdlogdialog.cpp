@@ -18,15 +18,6 @@ ThresholdLogDialog::ThresholdLogDialog(QWidget *parent, EventLogger *evtlogger) 
     ui->setupUi(this);
     mpEventLogger = evtlogger;
 
-}
-
-ThresholdLogDialog::~ThresholdLogDialog()
-{
-    delete ui;
-}
-
-void ThresholdLogDialog::init()
-{
     int rows;
 
     this->mColumnHeader = QStringList() << "Date" << "Measure"  << "Threshold" << "Sensor";
@@ -61,3 +52,10 @@ void ThresholdLogDialog::init()
     ui->tableView->setColumnWidth(SENSOR_COL,80);
 
 }
+
+ThresholdLogDialog::~ThresholdLogDialog()
+{
+    delete ui;
+    delete model;
+}
+

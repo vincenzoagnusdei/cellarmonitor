@@ -81,11 +81,6 @@ int ThresholdSetupDialog::initThresholds()
     return 1;
 }
 
-void ThresholdSetupDialog::on_ThresholdSetupDialog_finished(int result)
-{
-    qDebug() << "on_ThresholdSetupDialog_finished";
-    emit thresholdsChanged();
-}
 
 
 

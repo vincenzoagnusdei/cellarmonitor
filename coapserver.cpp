@@ -5,12 +5,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-const int COAPServer::gNumResources = NUM_RESOURCES;
 
 const char* COAPServer::gURIList[NUM_RESOURCES] = {
         "/test",
         "/currenttemperature"
-
     };
 
 
@@ -31,22 +29,22 @@ void COAPServer::run()
 
 
 
-    char *listenAddressString = "*";
-    char *listenPortString    = "9999";
+    char *listenAddressString = "*";    // default server address is local
+    char *listenPortString    = "9999";  // default port must be configurable -AV-
     char buffer[BUF_LEN];
     char uriBuffer[URI_BUF_LEN];
     int recvURILen = 0;
-    // storage for handling receive address
-    struct sockaddr_storage recvAddr;
+
+    struct sockaddr_storage recvAddr;   // storage for handling receive address
     socklen_t recvAddrLen = sizeof(struct sockaddr_storage);
     struct sockaddr_in *v4Addr;
     struct sockaddr_in6 *v6Addr;
     char straddr[INET6_ADDRSTRLEN];
     QMutex mutex;
     int sockfd;
-    // setup bind address
-    struct addrinfo *bindAddr;
-    CoapPDU *recvPDU;
+
+    struct addrinfo *bindAddr;  // setup bind address
+    CoapPDU *recvPDU=NULL;
     // setup URI callbacks using uthash hash table
     struct URIHashEntry *entry = NULL, *directory = NULL, *hash = NULL;
 
@@ -70,7 +68,6 @@ void COAPServer::run()
         // setup socket
         sockfd = socket(bindAddr->ai_family,bindAddr->ai_socktype,bindAddr->ai_protocol);
 
-
         if(bind(sockfd,bindAddr->ai_addr,bindAddr->ai_addrlen)!=0) {
 
             qDebug("Error binding socket");
@@ -84,13 +81,14 @@ void COAPServer::run()
 
             printAddress(bindAddr);
 
-                for(int i=0; i<gNumResources; i++) {
+            for(int i=0; i<NUM_RESOURCES; i++)
+            {
                 // create new hash structure to bind URI and callback
-            entry = (struct URIHashEntry*)malloc(sizeof(struct URIHashEntry));
+                entry = (struct URIHashEntry*)malloc(sizeof(struct URIHashEntry));
                 entry->uri = gURIList[i];
                 entry->callback = gCallbacks[i];
                 // add hash structure to hash table, note that key is the URI
-            HASH_ADD_KEYPTR(hh, directory, entry->uri, strlen(entry->uri), entry);
+                HASH_ADD_KEYPTR(hh, directory, entry->uri, strlen(entry->uri), entry);
             }
 
 
@@ -164,12 +162,14 @@ void COAPServer::run()
     }
 
 
+    if (recvPDU != NULL)
+        delete recvPDU;
 
 
 }
 
 
-// callback functions defined here
+// callback function for test
 int gTestCallback(CoapPDU *request, int sockfd, struct sockaddr_storage *recvFrom, MeasuringPointThread* m) {
     socklen_t addrLen = sizeof(struct sockaddr_in);
     if(recvFrom->ss_family==AF_INET6) {
@@ -225,6 +225,7 @@ int gTestCallback(CoapPDU *request, int sockfd, struct sockaddr_storage *recvFro
         case CoapPDU::COAP_RESET:
         break;
         default:
+            delete response;
             return 1;
         break;
     };
@@ -240,12 +241,13 @@ int gTestCallback(CoapPDU *request, int sockfd, struct sockaddr_storage *recvFro
     );
     if(sent<0) {
         qDebug("Error sending packet: %ld.",sent);
-
+        delete response;
         return 1;
     } else {
         qDebug("Sent: %ld",sent);
     }
 
+    delete response;
     return 0;
 }
 
@@ -311,6 +313,7 @@ int gGetTemperature(CoapPDU *request, int sockfd, struct sockaddr_storage *recvF
         case CoapPDU::COAP_RESET:
         break;
         default:
+            delete response;
             return 1;
         break;
     };
@@ -326,12 +329,13 @@ int gGetTemperature(CoapPDU *request, int sockfd, struct sockaddr_storage *recvF
     );
     if(sent<0) {
         qDebug("Error sending packet: %ld.",sent);
-
+        delete response;
         return 1;
     } else {
         qDebug("Sent: %ld",sent);
     }
 
+    delete response;
     return 0;
 }
 

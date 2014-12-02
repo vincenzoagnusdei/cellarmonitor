@@ -11,7 +11,6 @@ AlarmDialog::AlarmDialog(QWidget *parent, EventLogger *evlog) :
     ui->setupUi(this);
     model = new TemperatureAlarmListModel(this);
     ui->alarmlistView->setModel(model);
-
     connect(mpEventLogger, SIGNAL(tresholdCrossed(QString)), model,
             SLOT(onTresholdCrossed(QString)));
 
@@ -20,4 +19,5 @@ AlarmDialog::AlarmDialog(QWidget *parent, EventLogger *evlog) :
 AlarmDialog::~AlarmDialog()
 {
     delete ui;
+    delete model;
 }

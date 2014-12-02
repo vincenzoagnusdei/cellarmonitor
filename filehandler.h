@@ -15,6 +15,8 @@ public:
 
     static const QString THRESHOLDS_FILE;    
     static const QString MONITOR_STATUS_FILE;
+    static const QString PARAMETER_FILE;
+    enum parameters_enum {PORTNUM};
 
     FileHandler();
     ~FileHandler();
@@ -28,6 +30,11 @@ public:
 
 private:
 
+    void initParameters(QString *val);
+
+public:
+    int readParameters(QStringList *vals);
+    int writeParameters(QString *vals);
 
     QString INIT_MONITOR_STATUS_FILE;
     QString INIT_THRESHOLDS_FILE;

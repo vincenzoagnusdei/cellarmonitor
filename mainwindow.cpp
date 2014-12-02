@@ -27,6 +27,7 @@ MainWindow::~MainWindow()
     delete mpTempMPThread;
 
     delete mpCoapServerThread;
+    delete mpHttpDaemon;
 }
 
 void MainWindow::on_actionSetup_triggered()
@@ -91,6 +92,8 @@ void MainWindow::init()
 
    connect(&mThresholdSetupDialog, SIGNAL(thresholdsChanged()), this, SLOT(onThresholdsChanged()));
 
+   mpHttpDaemon = new HttpDaemon(this);
+
     this->startThreads();
 
 }
@@ -149,16 +152,26 @@ void MainWindow::startThreads()
 }
 
 
+FileHandler* MainWindow::getFileHanlder()
+{
+    return &mFH;
+}
+
+
 MeasuringPointThread* MainWindow::getTemperatureThreadInstance()
 {
     return mpTempMPThread;
 }
 
-void MainWindow::on_actionThTemperature_triggered()
-{
-    mThresholdLogDialog.init();
+void MainWindow::on_actionThTemperature_triggered(){
+
     mThresholdLogDialog.setModal(true);
     mThresholdLogDialog.setWindowTitle("Event Threshold Log");
     mThresholdLogDialog.exec();
 
+}
+
+void MainWindow::on_actionParameters_triggered()
+{
+    mParametersDialog.exec();
 }

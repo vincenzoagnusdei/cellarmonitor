@@ -16,6 +16,7 @@ DialogMonitorControl::DialogMonitorControl(QWidget *parent) :
 {
     ui->setupUi(this);
     initMonitorStatus();
+
 }
 
 DialogMonitorControl::~DialogMonitorControl()

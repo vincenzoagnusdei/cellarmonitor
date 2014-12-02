@@ -17,14 +17,13 @@ class AlarmDialog : public QDialog
 
 public:
     explicit AlarmDialog(QWidget *parent = 0, EventLogger *evlog=NULL);
-
     ~AlarmDialog();
 
 
 private:
     Ui::AlarmDialog *ui;
-    TemperatureAlarmListModel *model;
-    EventLogger *mpEventLogger;
+    TemperatureAlarmListModel *model;   // model for the TemperatureAlarmList
+    EventLogger *mpEventLogger;         // pointer to the EventLogger object
 
 public slots:
 

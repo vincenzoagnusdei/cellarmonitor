@@ -21,7 +21,6 @@ public:
 private slots:
     void on_buttonBox_accepted();
 
-    void on_ThresholdSetupDialog_finished(int result);
 
 signals:
     void thresholdsChanged();

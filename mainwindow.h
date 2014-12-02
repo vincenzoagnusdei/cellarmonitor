@@ -10,6 +10,8 @@
 #include "eventlogger.h"
 #include "alarmdialog.h"
 #include "thresholdlogdialog.h"
+#include "httpdaemon.h"
+#include "parametersdialog.h"
 
 
 namespace Ui {
@@ -26,6 +28,7 @@ public:
     void init();
     static const QString THREAD_T1;
     MeasuringPointThread* getTemperatureThreadInstance();
+    FileHandler* getFileHanlder();
 
 
 private slots:
@@ -34,6 +37,8 @@ private slots:
     void on_actionStatus_triggered();
     void on_actionDisplay_triggered();
     void on_actionThTemperature_triggered();
+
+    void on_actionParameters_triggered();
 
 private:
     Ui::MainWindow *ui;
@@ -44,7 +49,11 @@ private:
 
     ThresholdSetupDialog mThresholdSetupDialog;
     ThresholdLogDialog mThresholdLogDialog;
+    ParametersDialog mParametersDialog;
     AlarmDialog *mAlarmDialog=NULL;
+
+    HttpDaemon *mpHttpDaemon;
+
 
 
     EventLogger mEventLogger;

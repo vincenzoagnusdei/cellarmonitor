@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -30,7 +30,9 @@ SOURCES += main.cpp\
     temperaturealarmlistmodel.cpp \
     thresholdlogdialog.cpp \
     coapserver.cpp \
-    nethelper.c
+    nethelper.c \
+    httpdaemon.cpp \
+    parametersdialog.cpp
 
 HEADERS  += mainwindow.h \
     databackupdialog.h \
@@ -42,11 +44,14 @@ HEADERS  += mainwindow.h \
     alarmdialog.h \
     temperaturealarmlistmodel.h \
     thresholdlogdialog.h \
-    coapserver.h
+    coapserver.h \
+    httpdaemon.h \
+    parametersdialog.h
 
 FORMS    += mainwindow.ui \
     databackupdialog.ui \
     thresholdsetupdialog.ui \
     dialogmonitorcontrol.ui \
     alarmdialog.ui \
-    thresholdlogdialog.ui
+    thresholdlogdialog.ui \
+    parametersdialog.ui

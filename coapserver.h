@@ -19,21 +19,16 @@
 #include "uthash.h"
 #include "measuringpoint.h"
 
-#define NUM_RESOURCES 2
-
-// buffers for UDP and URIs
-#define BUF_LEN 500
-#define URI_BUF_LEN 32
+#define NUM_RESOURCES 2         // size of the available request to send to COAP Server
+#define BUF_LEN 500             // size of COAP receiving buffer
+#define URI_BUF_LEN 32          // buffer size for URI
 
 
- typedef int (*ResourceCallback)(CoapPDU *pdu, int sockfd, struct sockaddr_storage *recvFrom, MeasuringPointThread* m);
 
-
+typedef int (*ResourceCallback)(CoapPDU *pdu, int sockfd, struct sockaddr_storage *recvFrom, MeasuringPointThread* m);
 int gTestCallback(CoapPDU *request, int sockfd, struct sockaddr_storage *recvFrom, MeasuringPointThread* m);
 int gGetTemperature(CoapPDU *request, int sockfd, struct sockaddr_storage *recvFrom, MeasuringPointThread* m);
-
 extern "C" int call_MeasuringPointThread_getValue(MeasuringPointThread m);
-
 
 
 class COAPServer : public QThread
@@ -46,7 +41,7 @@ public:
     bool Stop;
 
 
-  signals:
+signals:
 
 public slots:
 
@@ -55,7 +50,7 @@ protected:
 
 private:
 
-    enum CALLBACK {TEST,GETTEMPERATURE};
+    enum CALLBACK {TEST,GETTEMPERATURE};    // enum for the different callback
 
     // using uthash for the URI hash table. Each entry contains a callback handler.
     struct URIHashEntry {
@@ -65,17 +60,10 @@ private:
         UT_hash_handle hh;
     };
 
+    static const char *gURIList[NUM_RESOURCES]; // array for the URI request
+    ResourceCallback gCallbacks[NUM_RESOURCES]; // URIs mapped to callback functions here
 
-
-    static const char *gURIList[NUM_RESOURCES];
-
-
-    // URIs mapped to callback functions here
-    ResourceCallback gCallbacks[NUM_RESOURCES];
-
-    static const int gNumResources;
-
-    void initgCallbacks();
+    void initgCallbacks();  // initialize the callback array
 
 
 
