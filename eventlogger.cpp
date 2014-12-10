@@ -35,7 +35,7 @@ EventLogger::EventLogger(QObject *parent) :
 void EventLogger::onMinThresholdCrossed(float val , float th, QString sensor, EVENT_TYPE_ENUM ev)
 {
 
-    QString event = this->prepareAlarmEventForFile(val , th, sensor, ev);
+    QString event = this->prepareEventForFile(val , th, sensor, ev);
     this->writeEvent(event, ev);
     event=this->prepareAlarmEventForGUI(val , th, sensor, ev);
     tresholdCrossed(event);
@@ -46,7 +46,7 @@ void EventLogger::onMinThresholdCrossed(float val , float th, QString sensor, EV
 void EventLogger::onMaxThresholdCrossed(float val , float th, QString sensor, EVENT_TYPE_ENUM ev)
 {
 
-    QString event = this->prepareAlarmEventForFile(val , th, sensor, ev);
+    QString event = this->prepareEventForFile(val , th, sensor, ev);
     this->writeEvent(event, ev);
     event=this->prepareAlarmEventForGUI(val , th, sensor, ev);
     tresholdCrossed(event);
@@ -55,10 +55,9 @@ void EventLogger::onMaxThresholdCrossed(float val , float th, QString sensor, EV
 
 void EventLogger::onCurrentValue(float val, QString sensor, EVENT_TYPE_ENUM ev)
 {
-    QString event = QString::number(val);
-    event.append(" ");
-    event.append(sensor);
-    writeEvent(event, ev);
+
+    QString event=this->prepareEventForFile(val, -1, sensor, ev);
+    this->writeEvent(event, ev);
 
 }
 
@@ -92,7 +91,7 @@ QString EventLogger::prepareAlarmEventForGUI(float val , float th, QString senso
 
 }
 
-QString EventLogger::prepareAlarmEventForFile(float val , float th, QString sensor, EVENT_TYPE_ENUM ev)
+QString EventLogger::prepareEventForFile(float val , float th, QString sensor, EVENT_TYPE_ENUM ev)
 {     
 
     QString event;
@@ -104,9 +103,11 @@ QString EventLogger::prepareAlarmEventForFile(float val , float th, QString sens
     event.append(QString::number(val));
     event.append(",");
 
-
-    event.append(QString::number(th));
-    event.append(",");
+    if (th != -1.0)
+    {   // add value becuase is a threshold crossing
+        event.append(QString::number(th));
+        event.append(",");
+    }
 
     event.append(sensor);
     event.append(",");
@@ -121,6 +122,8 @@ int EventLogger::writeEvent(QString event, EVENT_TYPE_ENUM ev)
 {
 
     QString filename = this->getFileName(ev);
+
+    assert (filename!=NULL);
 
     QFile file(filename);
     if (!file.open(QFile::Append | QFile::Text))
@@ -162,7 +165,7 @@ QString EventLogger::getFileName(EVENT_TYPE_ENUM evtype)
         case TEMPERATURE_TH:
 
             qfinfoa = QFileInfo(LOG_TEMPERATURE_TH_CROSSED_FILE_A);
-            qfinfob = QFileInfo(LOG_TEMPERATURE_TH_CROSSED_FILE_B);            
+            qfinfob = QFileInfo(LOG_TEMPERATURE_TH_CROSSED_FILE_B);
 
          break;
 
@@ -214,7 +217,7 @@ QString EventLogger::getFileName(EVENT_TYPE_ENUM evtype)
         if (qfinfoa.size() < LOG_SIZE)
         {
 
-            filename=qfinfoa.fileName();
+            filename=qfinfoa.filePath();
         }
         else
         {
@@ -223,18 +226,18 @@ QString EventLogger::getFileName(EVENT_TYPE_ENUM evtype)
             {
                  if (qfinfob.size() < LOG_SIZE)
                  {
-                     filename=qfinfob.fileName();;
+                     filename=qfinfob.filePath();
                  }
                  else
                  {
                      if (qfinfoa.lastModified() > qfinfob.lastModified())
                      {
-                         filename=qfinfob.fileName();
+                         filename=qfinfob.filePath();
                          trunkateFile(filename);
                      }
                      else
                      {
-                         filename=qfinfoa.fileName();
+                         filename=qfinfoa.filePath();
                          trunkateFile(filename);
                      }
 
@@ -242,17 +245,16 @@ QString EventLogger::getFileName(EVENT_TYPE_ENUM evtype)
              }
              else
              {
-                  filename=qfinfob.fileName();
+                  filename=qfinfob.filePath();
              }
 
             }
     }
     else
     {
-      filename=qfinfoa.fileName();
+      filename=qfinfoa.filePath();
     }
 
-    assert (filename!=NULL);
 
     return filename;
 
@@ -283,7 +285,7 @@ int EventLogger::readAllEventThresholds(QStringList *vals, EVENT_TYPE_ENUM evtyp
 {
     QFileInfo qfinfoa;
     QFileInfo qfinfob;
-    QString filename = NULL;
+    QString filename = NULL;   
     QString data;
 
     switch(evtype)
@@ -343,19 +345,19 @@ int EventLogger::readAllEventThresholds(QStringList *vals, EVENT_TYPE_ENUM evtyp
 
             if (qfinfoa.lastModified() > qfinfob.lastModified())
             {
-                filename = qfinfoa.fileName();
+                filename = qfinfoa.filePath();
 
             }
             else
             {
 
-                filename = qfinfob.fileName();
+                filename = qfinfob.filePath();
             }
 
         }
         else
         {
-            filename = qfinfoa.fileName();
+            filename = qfinfoa.filePath();
         }
     }
     else
@@ -363,14 +365,13 @@ int EventLogger::readAllEventThresholds(QStringList *vals, EVENT_TYPE_ENUM evtyp
         if (qfinfob.exists() == true)
         {
 
-            filename = qfinfob.fileName();
+            filename = qfinfob.filePath();
 
         }
 
     }
 
 
-    assert (filename!=NULL);
 
     QFile file(filename);
       if (!file.open(QFile::ReadOnly ))
@@ -390,3 +391,42 @@ int EventLogger::readAllEventThresholds(QStringList *vals, EVENT_TYPE_ENUM evtyp
     return 1;
 
 }
+
+/*
+ * Get date of the last file update as QStringList
+ *
+ */
+
+QStringList EventLogger::getFileInfoUpdate()
+{
+    QStringList fileupdateinfo;
+    QString s;
+
+    QString fn = this->getFileName(TEMPERATURE_TH);
+
+    assert (fn!=NULL);
+
+    QFileInfo qfinfo = QFileInfo(fn);
+
+    fileupdateinfo.append(qfinfo.fileName());
+    fileupdateinfo.append(" ");
+    fileupdateinfo.append(QString::number(qfinfo.lastModified().currentMSecsSinceEpoch()));
+    fileupdateinfo.append(" ");
+
+
+    fn = this->getFileName(TEMPERATURE_VAL);
+
+    assert (fn!=NULL);
+
+    qfinfo.setFile(qfinfo.fileName());
+
+    fileupdateinfo.append(fn);
+    fileupdateinfo.append(" ");
+    fileupdateinfo.append(QString::number(qfinfo.lastModified().currentMSecsSinceEpoch()));
+    fileupdateinfo.append("\n");
+
+    return fileupdateinfo;
+}
+
+
+

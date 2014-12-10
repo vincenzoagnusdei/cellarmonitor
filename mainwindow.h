@@ -12,6 +12,7 @@
 #include "thresholdlogdialog.h"
 #include "httpdaemon.h"
 #include "parametersdialog.h"
+#include "filesender.h"
 
 
 namespace Ui {
@@ -24,11 +25,12 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-    void init();
+    ~MainWindow();   
     static const QString THREAD_T1;
     MeasuringPointThread* getTemperatureThreadInstance();
     FileHandler* getFileHanlder();
+    FileSender* getFileSenderHandler();    
+    EventLogger* getEventLoggerHanlder();
 
 
 private slots:
@@ -46,18 +48,14 @@ private:
     MeasuringPointThread *mpLumMPThread=NULL;
     MeasuringPointThread *mpHumMPThread=NULL;
     COAPServer *mpCoapServerThread=NULL;
-
-    ThresholdSetupDialog mThresholdSetupDialog;
-    ThresholdLogDialog mThresholdLogDialog;
+    FileSender *mpFileSender=NULL;
+    ThresholdSetupDialog mThresholdSetupDialog;    
     ParametersDialog mParametersDialog;
     AlarmDialog *mAlarmDialog=NULL;
-
     HttpDaemon *mpHttpDaemon;
-
-
-
     EventLogger mEventLogger;
     FileHandler mFH;
+    ThresholdLogDialog mThresholdLogDialog;
     void startThreads();
     void startMonitoring();
 

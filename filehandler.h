@@ -16,6 +16,8 @@ public:
     static const QString THRESHOLDS_FILE;    
     static const QString MONITOR_STATUS_FILE;
     static const QString PARAMETER_FILE;
+    static const QString FILE_DIRECTORY;
+
     enum parameters_enum {PORTNUM};
 
     FileHandler();

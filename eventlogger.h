@@ -30,6 +30,7 @@ public:
     explicit EventLogger(QObject *parent = 0);
     int writeEvent(QString, EVENT_TYPE_ENUM);
     int readAllEventThresholds(QStringList *, EVENT_TYPE_ENUM);
+    QStringList getFileInfoUpdate();
 
 private:
 
@@ -42,7 +43,7 @@ private:
     QString mLogCurrValueHumidityFile;
     QString mLogCurrValueLuminosityFile;
     QString prepareAlarmEventForGUI(float, float , QString, EVENT_TYPE_ENUM );
-    QString prepareAlarmEventForFile(float, float, QString, EVENT_TYPE_ENUM);
+    QString prepareEventForFile(float, float, QString, EVENT_TYPE_ENUM);
 
 
 signals:

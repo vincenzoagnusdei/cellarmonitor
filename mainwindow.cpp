@@ -6,6 +6,8 @@
 #include "thresholdsetupdialog.h"
 #include "databackupdialog.h"
 #include "dialogmonitorcontrol.h"
+#include <QThread>
+#include <QDir>
 
 
 
@@ -15,7 +17,30 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
+    QDir::setCurrent(FileHandler::FILE_DIRECTORY);
+
+    ui->setupUi(this);    
+
+    mpCoapServerThread = new COAPServer(this);    
+    mpTempMPThread = new MeasuringPointThread(this, 0,40);
+    mpTempMPThread->setObjectName(THREAD_T1);    
+    mAlarmDialog = new AlarmDialog(this, &mEventLogger);
+    mpHttpDaemon = new HttpDaemon(this);
+    mpFileSender = new FileSender(this);
+
+    qRegisterMetaType<EventLogger::EVENT_TYPE_ENUM>("EventLogger::EVENT_TYPE_ENUM");
+    connect(mpTempMPThread,SIGNAL(minThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)), &mEventLogger,
+            SLOT(onMinThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)));
+    connect(mpTempMPThread,SIGNAL(maxThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)), &mEventLogger,
+                    SLOT(onMaxThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)));
+    connect(mpTempMPThread,SIGNAL(currentValue(float,QString,EventLogger::EVENT_TYPE_ENUM)), &mEventLogger,
+            SLOT(onCurrentValue(float,QString,EventLogger::EVENT_TYPE_ENUM)));
+    connect(&mThresholdSetupDialog, SIGNAL(thresholdsChanged()), this, SLOT(onThresholdsChanged()));
+
+
+    this->startThreads();
+
+    qDebug() <<  "----------------------------------Main" << QThread::currentThreadId();
 
 }
 
@@ -25,9 +50,9 @@ MainWindow::~MainWindow()
     if (mAlarmDialog != NULL)
         delete mAlarmDialog;
     delete mpTempMPThread;
-
     delete mpCoapServerThread;
     delete mpHttpDaemon;
+    delete mpFileSender;
 }
 
 void MainWindow::on_actionSetup_triggered()
@@ -73,30 +98,7 @@ void MainWindow::onStartMonitoringChanged()
     this->startThreads();
 }
 
-void MainWindow::init()
-{
 
-   qRegisterMetaType<EventLogger::EVENT_TYPE_ENUM>("EventLogger::EVENT_TYPE_ENUM");
-   mpCoapServerThread = new COAPServer(this);
-   mpTempMPThread = new MeasuringPointThread(this, 0,40);
-   mpTempMPThread->setObjectName(THREAD_T1);
-   mAlarmDialog = new AlarmDialog(this, &mEventLogger);
-
-   connect(mpTempMPThread,SIGNAL(minThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)), &mEventLogger,
-           SLOT(onMinThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)));
-   connect(mpTempMPThread,SIGNAL(maxThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)), &mEventLogger,
-                   SLOT(onMaxThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)));
-   connect(mpTempMPThread,SIGNAL(currentValue(float,QString,EventLogger::EVENT_TYPE_ENUM)), &mEventLogger,
-           SLOT(onCurrentValue(float,QString,EventLogger::EVENT_TYPE_ENUM)));
-
-
-   connect(&mThresholdSetupDialog, SIGNAL(thresholdsChanged()), this, SLOT(onThresholdsChanged()));
-
-   mpHttpDaemon = new HttpDaemon(this);
-
-    this->startThreads();
-
-}
 
 
 void MainWindow::onThresholdsChanged()
@@ -109,7 +111,11 @@ void MainWindow::startThreads()
     QStringList monitorstatus;
     QStringList thresholds;
 
-    mpCoapServerThread->start();
+
+    if (!mpCoapServerThread->isRunning())
+    {
+        mpCoapServerThread->start();
+    }
 
 
     if ( mFH.readMonitorStatus(&monitorstatus) == 1)
@@ -155,6 +161,17 @@ void MainWindow::startThreads()
 FileHandler* MainWindow::getFileHanlder()
 {
     return &mFH;
+}
+
+EventLogger* MainWindow::getEventLoggerHanlder()
+{
+    return &mEventLogger;
+}
+
+
+FileSender*  MainWindow::getFileSenderHandler()
+{
+    return mpFileSender;
 }
 
 

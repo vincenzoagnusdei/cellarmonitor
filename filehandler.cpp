@@ -9,14 +9,15 @@ using namespace std;
 const QString FileHandler::THRESHOLDS_FILE = "thresholds.txt";
 const QString FileHandler::MONITOR_STATUS_FILE = "monitorstatus.txt";
 const QString FileHandler::PARAMETER_FILE = "parameters.txt";
-
-
+const QString FileHandler::FILE_DIRECTORY="/home/cellarmonitor/";
 
 
 FileHandler::FileHandler()
 {
     INIT_MONITOR_STATUS_FILE = "0,0,0"; /* data init to monitor disable check of thresholds */
     INIT_THRESHOLDS_FILE = "12,21,63,11,22,64,10,25,63"; /* data to init the thresholds file hum, lum. temp */
+
+    // this->initParameters();
 }
 
 FileHandler::~FileHandler()
@@ -88,10 +89,10 @@ int FileHandler::writeMonitorStatus(QString *vals)
 {
 
 
-    QFile file(FileHandler::MONITOR_STATUS_FILE);        
+    QFile file(MONITOR_STATUS_FILE);
     if (!file.open(QFile::WriteOnly | QFile::Truncate | QFile::Text))
     {
-        qDebug() << "Error writing file " << FileHandler::MONITOR_STATUS_FILE;
+        qDebug() << "Error writing file " << MONITOR_STATUS_FILE;
         return -1;
     }
 
@@ -122,7 +123,7 @@ int FileHandler::readMonitorStatus(QStringList *vals)
     }
 
 
-    QFile file(FileHandler::MONITOR_STATUS_FILE);
+    QFile file(MONITOR_STATUS_FILE);
     if (!file.open(QFile::ReadOnly ))
     {
         qDebug() << "Error opening Monitor Status File";
