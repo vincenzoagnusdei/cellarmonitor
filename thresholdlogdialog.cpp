@@ -22,7 +22,7 @@ ThresholdLogDialog::ThresholdLogDialog(QWidget *parent, EventLogger *evtlogger) 
 
     this->mColumnHeader = QStringList() << "Date" << "Measure"  << "Threshold" << "Sensor";
 
-    int ret = mpEventLogger->readAllEventThresholds(&mVals, EventLogger::TEMPERATURE_TH);
+    int ret = mpEventLogger->readAllEventThresholds(&mVals, EventLogger::TEMPERATURE_MAX_TH);
     if (ret == -1)
     {
         rows=0;

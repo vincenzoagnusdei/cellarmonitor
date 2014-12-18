@@ -32,9 +32,7 @@ SOURCES += main.cpp\
     coapserver.cpp \
     nethelper.c \
     httpdaemon.cpp \
-    parametersdialog.cpp \
-    filesender.cpp \
-    networkfilesender.cpp
+    parametersdialog.cpp
 
 HEADERS  += mainwindow.h \
     databackupdialog.h \
@@ -48,9 +46,7 @@ HEADERS  += mainwindow.h \
     thresholdlogdialog.h \
     coapserver.h \
     httpdaemon.h \
-    parametersdialog.h \
-    filesender.h \
-    networkfilesender.h
+    parametersdialog.h
 
 FORMS    += mainwindow.ui \
     databackupdialog.ui \

@@ -12,7 +12,7 @@
 #include "thresholdlogdialog.h"
 #include "httpdaemon.h"
 #include "parametersdialog.h"
-#include "filesender.h"
+
 
 
 namespace Ui {
@@ -28,8 +28,7 @@ public:
     ~MainWindow();   
     static const QString THREAD_T1;
     MeasuringPointThread* getTemperatureThreadInstance();
-    FileHandler* getFileHanlder();
-    FileSender* getFileSenderHandler();    
+    FileHandler* getFileHanlder();       
     EventLogger* getEventLoggerHanlder();
 
 
@@ -47,8 +46,7 @@ private:
     MeasuringPointThread *mpTempMPThread=NULL;
     MeasuringPointThread *mpLumMPThread=NULL;
     MeasuringPointThread *mpHumMPThread=NULL;
-    COAPServer *mpCoapServerThread=NULL;
-    FileSender *mpFileSender=NULL;
+    COAPServer *mpCoapServerThread=NULL;   
     ThresholdSetupDialog mThresholdSetupDialog;    
     ParametersDialog mParametersDialog;
     AlarmDialog *mAlarmDialog=NULL;

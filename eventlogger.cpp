@@ -9,13 +9,20 @@
 #include <assert.h>
 
 
+const QString EventLogger::LOG_MIN_TEMPERATURE_TH_CROSSED_FILE_A = "logmintempthXa.txt";
+const QString EventLogger::LOG_MIN_TEMPERATURE_TH_CROSSED_FILE_B = "logmintempthXb.txt";
+const QString EventLogger::LOG_MIN_HUMIDITY_TH_CROSSED_FILE_A = "logminhumhXa.txt";
+const QString EventLogger::LOG_MIN_HUMIDITY_TH_CROSSED_FILE_B = "logminhumhXb.txt";
+const QString EventLogger::LOG_MIN_LUMINOSITY_TH_CROSSED_FILE_A = "logminlumXa.txt";
+const QString EventLogger::LOG_MIN_LUMINOSITY_TH_CROSSED_FILE_B = "logminhumhXb.txt";
 
-const QString EventLogger::LOG_TEMPERATURE_TH_CROSSED_FILE_A = "logtempthXa.txt";
-const QString EventLogger::LOG_TEMPERATURE_TH_CROSSED_FILE_B = "logtempthXb.txt";
-const QString EventLogger::LOG_HUMIDITY_TH_CROSSED_FILE_A = "loghumhXa.txt";
-const QString EventLogger::LOG_HUMIDITY_TH_CROSSED_FILE_B = "loghumhXb.txt";
-const QString EventLogger::LOG_LUMINOSITY_TH_CROSSED_FILE_A = "loglumXa.txt";
-const QString EventLogger::LOG_LUMINOSITY_TH_CROSSED_FILE_B = "loghumhXb.txt";
+const QString EventLogger::LOG_MAX_TEMPERATURE_TH_CROSSED_FILE_A = "logmaxtempthXa.txt";
+const QString EventLogger::LOG_MAX_TEMPERATURE_TH_CROSSED_FILE_B = "logmaxtempthXb.txt";
+const QString EventLogger::LOG_MAX_HUMIDITY_TH_CROSSED_FILE_A = "logmaxhumhXa.txt";
+const QString EventLogger::LOG_MAX_HUMIDITY_TH_CROSSED_FILE_B = "logmaxhumhXb.txt";
+const QString EventLogger::LOG_MAX_LUMINOSITY_TH_CROSSED_FILE_A = "logmaxlumXa.txt";
+const QString EventLogger::LOG_MAX_LUMINOSITY_TH_CROSSED_FILE_B = "logmaxhumhXb.txt";
+
 const QString EventLogger::LOG_TEMPERATURE_CURRENT_VALUE_FILE_A = "logcurrvaltempa.txt";
 const QString EventLogger::LOG_TEMPERATURE_CURRENT_VALUE_FILE_B = "logcurrvaltempa.txt";
 const QString EventLogger::LOG_HUMIDITY_CURRENT_VALUE_FILE_A = "logcurrvalhuma.txt";
@@ -121,7 +128,7 @@ QString EventLogger::prepareEventForFile(float val , float th, QString sensor, E
 int EventLogger::writeEvent(QString event, EVENT_TYPE_ENUM ev)
 {
 
-    QString filename = this->getFileName(ev);
+    QString filename = this->getFileLogName(ev);
 
     assert (filename!=NULL);
 
@@ -153,63 +160,24 @@ int EventLogger::writeEvent(QString event, EVENT_TYPE_ENUM ev)
  * file A exist and sizr is > LOG_SIZE, file B exist and size is > LOG_SIZE, file A datetime > file B datetime, trunk and ret B
  */
 
-QString EventLogger::getFileName(EVENT_TYPE_ENUM evtype)
+QString EventLogger::getFileLogName(EVENT_TYPE_ENUM evtype)
 {
 
     QFileInfo qfinfoa;
     QFileInfo qfinfob;   
-    QString filename = NULL;    
+    QString filenamea;
+    QString filenameb;
+    QString filename;
 
-    switch(evtype)
-    {
-        case TEMPERATURE_TH:
-
-            qfinfoa = QFileInfo(LOG_TEMPERATURE_TH_CROSSED_FILE_A);
-            qfinfob = QFileInfo(LOG_TEMPERATURE_TH_CROSSED_FILE_B);
-
-         break;
-
-        case TEMPERATURE_VAL:
-            qfinfoa = QFileInfo(LOG_TEMPERATURE_CURRENT_VALUE_FILE_A);
-            qfinfob = QFileInfo(LOG_TEMPERATURE_CURRENT_VALUE_FILE_B);
-
-        break;
-
-        case HUMIDITY_TH:
-
-            qfinfoa = QFileInfo(LOG_HUMIDITY_TH_CROSSED_FILE_A);
-            qfinfob = QFileInfo(LOG_HUMIDITY_TH_CROSSED_FILE_B);
-
-        break;
-
-        case HUMIDITY_VAL:
-
-            qfinfoa = QFileInfo(LOG_HUMIDITY_CURRENT_VALUE_FILE_A);
-            qfinfob = QFileInfo(LOG_HUMIDITY_CURRENT_VALUE_FILE_B);
-
-        break;
-
-        case LUMINOSITY_TH:
-
-            qfinfoa = QFileInfo(LOG_LUMINOSITY_TH_CROSSED_FILE_A);
-            qfinfob = QFileInfo(LOG_LUMINOSITY_TH_CROSSED_FILE_A);
-
-        break;
-
-        case LUMINOSITY_VAL:
-
-            qfinfoa = QFileInfo(LOG_LUMINOSITY_CURRENT_VALUE_FILE_A);
-            qfinfob = QFileInfo(LOG_LUMINOSITY_CURRENT_VALUE_FILE_B);
-
-        break;
-
-        default:
-
-            qDebug() << "Unknown event type";
+    filename.clear();
 
 
+    this->getFileNames(evtype, &filenamea, &filenameb);
 
-     }
+    assert(filenamea.size() > 0 && filenameb.size());
+
+    qfinfoa.setFile(filenamea);
+    qfinfob.setFile(filenameb);
 
 
     if (qfinfoa.exists())
@@ -217,7 +185,7 @@ QString EventLogger::getFileName(EVENT_TYPE_ENUM evtype)
         if (qfinfoa.size() < LOG_SIZE)
         {
 
-            filename=qfinfoa.filePath();
+            filename=qfinfoa.fileName();
         }
         else
         {
@@ -226,18 +194,18 @@ QString EventLogger::getFileName(EVENT_TYPE_ENUM evtype)
             {
                  if (qfinfob.size() < LOG_SIZE)
                  {
-                     filename=qfinfob.filePath();
+                     filename=qfinfob.fileName();
                  }
                  else
                  {
                      if (qfinfoa.lastModified() > qfinfob.lastModified())
                      {
-                         filename=qfinfob.filePath();
+                         filename=qfinfob.fileName();
                          trunkateFile(filename);
                      }
                      else
                      {
-                         filename=qfinfoa.filePath();
+                         filename=qfinfoa.fileName();
                          trunkateFile(filename);
                      }
 
@@ -245,14 +213,14 @@ QString EventLogger::getFileName(EVENT_TYPE_ENUM evtype)
              }
              else
              {
-                  filename=qfinfob.filePath();
+                  filename=qfinfob.fileName();
              }
 
             }
     }
     else
     {
-      filename=qfinfoa.filePath();
+      filename=qfinfoa.fileName();
     }
 
 
@@ -279,56 +247,74 @@ void EventLogger::trunkateFile(QString filename)
 }
 
 
-
-
-int EventLogger::readAllEventThresholds(QStringList *vals, EVENT_TYPE_ENUM evtype)
+void EventLogger::getFileNames(EVENT_TYPE_ENUM evtype, QString *filenamea, QString  *filenameb)
 {
-    QFileInfo qfinfoa;
-    QFileInfo qfinfob;
-    QString filename = NULL;   
-    QString data;
+
+    filenamea->clear();
+    filenameb->clear();
 
     switch(evtype)
     {
-        case TEMPERATURE_TH:
+        case TEMPERATURE_MIN_TH:
 
-            qfinfoa = QFileInfo(LOG_TEMPERATURE_TH_CROSSED_FILE_A);
-            qfinfob = QFileInfo(LOG_TEMPERATURE_TH_CROSSED_FILE_B);
+            filenamea->append(LOG_MIN_TEMPERATURE_TH_CROSSED_FILE_A);
+            filenameb->append(LOG_MIN_TEMPERATURE_TH_CROSSED_FILE_B);
 
+         break;
+
+        case TEMPERATURE_MAX_TH:
+
+            filenamea->append(LOG_MAX_TEMPERATURE_TH_CROSSED_FILE_A);
+            filenameb->append(LOG_MAX_TEMPERATURE_TH_CROSSED_FILE_B);
 
          break;
 
         case TEMPERATURE_VAL:
-            qfinfoa = QFileInfo(LOG_TEMPERATURE_CURRENT_VALUE_FILE_A);
-            qfinfob = QFileInfo(LOG_TEMPERATURE_CURRENT_VALUE_FILE_B);
+            filenamea->append(LOG_TEMPERATURE_CURRENT_VALUE_FILE_A);
+            filenameb->append(LOG_TEMPERATURE_CURRENT_VALUE_FILE_B);
 
         break;
 
-        case HUMIDITY_TH:
+        case HUMIDITY_MIN_TH:
 
-            qfinfoa = QFileInfo(LOG_HUMIDITY_TH_CROSSED_FILE_A);
-            qfinfob = QFileInfo(LOG_HUMIDITY_TH_CROSSED_FILE_B);
+            filenamea->append(LOG_MIN_HUMIDITY_TH_CROSSED_FILE_A);
+            filenameb->append(LOG_MIN_HUMIDITY_TH_CROSSED_FILE_B);
 
         break;
+
+        case HUMIDITY_MAX_TH:
+
+            filenamea->append(LOG_MAX_HUMIDITY_TH_CROSSED_FILE_A);
+            filenameb->append(LOG_MAX_HUMIDITY_TH_CROSSED_FILE_B);
+
+        break;
+
 
         case HUMIDITY_VAL:
 
-            qfinfoa = QFileInfo(LOG_HUMIDITY_CURRENT_VALUE_FILE_A);
-            qfinfob = QFileInfo(LOG_HUMIDITY_CURRENT_VALUE_FILE_B);
+            filenamea->append(LOG_HUMIDITY_CURRENT_VALUE_FILE_A);
+            filenameb->append(LOG_HUMIDITY_CURRENT_VALUE_FILE_B);
 
         break;
 
-        case LUMINOSITY_TH:
+        case LUMINOSITY_MIN_TH:
 
-            qfinfoa = QFileInfo(LOG_LUMINOSITY_TH_CROSSED_FILE_A);
-            qfinfob = QFileInfo(LOG_LUMINOSITY_TH_CROSSED_FILE_A);
+            filenamea->append(LOG_MIN_LUMINOSITY_TH_CROSSED_FILE_A);
+            filenameb->append(LOG_MIN_LUMINOSITY_TH_CROSSED_FILE_A);
+
+        break;
+
+        case LUMINOSITY_MAX_TH:
+
+            filenamea->append(LOG_MAX_LUMINOSITY_TH_CROSSED_FILE_A);
+            filenameb->append(LOG_MAX_LUMINOSITY_TH_CROSSED_FILE_A);
 
         break;
 
         case LUMINOSITY_VAL:
 
-            qfinfoa = QFileInfo(LOG_LUMINOSITY_CURRENT_VALUE_FILE_A);
-            qfinfob = QFileInfo(LOG_LUMINOSITY_CURRENT_VALUE_FILE_B);
+            filenamea->append(LOG_LUMINOSITY_CURRENT_VALUE_FILE_A);
+            filenameb->append(LOG_LUMINOSITY_CURRENT_VALUE_FILE_B);
 
         break;
 
@@ -336,7 +322,30 @@ int EventLogger::readAllEventThresholds(QStringList *vals, EVENT_TYPE_ENUM evtyp
 
             qDebug() << "Unknown event type";
 
+
+
      }
+
+}
+
+int EventLogger::readAllEventThresholds(QStringList *vals, EVENT_TYPE_ENUM evtype)
+{
+    QFileInfo qfinfoa;
+    QFileInfo qfinfob;
+    QString filenamea;
+    QString filenameb;
+    QString filename;
+    QString data;
+
+    filename.clear();
+    filenamea.clear();
+    filenameb.clear();
+
+    this->getFileNames(evtype, &filenamea, &filenameb);
+
+    qfinfoa.setFile(filenamea);
+    qfinfob.setFile(filenameb);
+
 
     if (qfinfoa.exists() == true)
     {
@@ -345,19 +354,19 @@ int EventLogger::readAllEventThresholds(QStringList *vals, EVENT_TYPE_ENUM evtyp
 
             if (qfinfoa.lastModified() > qfinfob.lastModified())
             {
-                filename = qfinfoa.filePath();
+                filename = qfinfoa.fileName();
 
             }
             else
             {
 
-                filename = qfinfob.filePath();
+                filename = qfinfob.fileName();
             }
 
         }
         else
         {
-            filename = qfinfoa.filePath();
+            filename = qfinfoa.fileName();
         }
     }
     else
@@ -365,7 +374,7 @@ int EventLogger::readAllEventThresholds(QStringList *vals, EVENT_TYPE_ENUM evtyp
         if (qfinfob.exists() == true)
         {
 
-            filename = qfinfob.filePath();
+            filename = qfinfob.fileName();
 
         }
 
@@ -402,27 +411,31 @@ QStringList EventLogger::getFileInfoUpdate()
     QStringList fileupdateinfo;
     QString s;
 
-    QString fn = this->getFileName(TEMPERATURE_TH);
+    QString fn = this->getFileLogName(TEMPERATURE_MIN_TH);
 
     assert (fn!=NULL);
 
     QFileInfo qfinfo = QFileInfo(fn);
 
+    QDateTime lastmodifiedth(qfinfo.lastModified());
+
     fileupdateinfo.append(qfinfo.fileName());
     fileupdateinfo.append(" ");
-    fileupdateinfo.append(QString::number(qfinfo.lastModified().currentMSecsSinceEpoch()));
+    fileupdateinfo.append(QString::number(lastmodifiedth.toMSecsSinceEpoch()));
     fileupdateinfo.append(" ");
 
 
-    fn = this->getFileName(TEMPERATURE_VAL);
+    fn = this->getFileLogName(TEMPERATURE_VAL);
 
     assert (fn!=NULL);
 
     qfinfo.setFile(qfinfo.fileName());
 
+    QDateTime lastmodified(qfinfo.lastModified());
+
     fileupdateinfo.append(fn);
     fileupdateinfo.append(" ");
-    fileupdateinfo.append(QString::number(qfinfo.lastModified().currentMSecsSinceEpoch()));
+    fileupdateinfo.append(QString::number(lastmodified.toMSecsSinceEpoch()));
     fileupdateinfo.append("\n");
 
     return fileupdateinfo;

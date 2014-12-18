@@ -6,7 +6,6 @@
 #include <QDebug>
 #include <QAbstractSocket>
 #include <QStringList>
-#include <networkfilesender.h>
 
 
 /* get filelist \n -> name,date,time */

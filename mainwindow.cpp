@@ -25,8 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mpTempMPThread = new MeasuringPointThread(this, 0,40);
     mpTempMPThread->setObjectName(THREAD_T1);    
     mAlarmDialog = new AlarmDialog(this, &mEventLogger);
-    mpHttpDaemon = new HttpDaemon(this);
-    mpFileSender = new FileSender(this);
+    mpHttpDaemon = new HttpDaemon(this);   
 
     qRegisterMetaType<EventLogger::EVENT_TYPE_ENUM>("EventLogger::EVENT_TYPE_ENUM");
     connect(mpTempMPThread,SIGNAL(minThresholdCrossed(float,float,QString,EventLogger::EVENT_TYPE_ENUM)), &mEventLogger,
@@ -51,8 +50,7 @@ MainWindow::~MainWindow()
         delete mAlarmDialog;
     delete mpTempMPThread;
     delete mpCoapServerThread;
-    delete mpHttpDaemon;
-    delete mpFileSender;
+    delete mpHttpDaemon;   
 }
 
 void MainWindow::on_actionSetup_triggered()
@@ -169,10 +167,6 @@ EventLogger* MainWindow::getEventLoggerHanlder()
 }
 
 
-FileSender*  MainWindow::getFileSenderHandler()
-{
-    return mpFileSender;
-}
 
 
 MeasuringPointThread* MainWindow::getTemperatureThreadInstance()

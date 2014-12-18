@@ -2,6 +2,7 @@
 #define EVENTLOGGER_H
 
 #include <QObject>
+#include <QString>
 
 class EventLogger : public QObject
 {
@@ -10,15 +11,24 @@ class EventLogger : public QObject
 
 public:
 
-    enum EVENT_TYPE_ENUM {HUMIDITY_TH, HUMIDITY_VAL, TEMPERATURE_TH, TEMPERATURE_VAL, LUMINOSITY_TH, LUMINOSITY_VAL };
+    enum EVENT_TYPE_ENUM {HUMIDITY_MIN_TH, HUMIDITY_MAX_TH, HUMIDITY_VAL, TEMPERATURE_MIN_TH, TEMPERATURE_MAX_TH,
+                          TEMPERATURE_VAL, LUMINOSITY_MIN_TH, LUMINOSITY_MAX_TH, LUMINOSITY_VAL };
 
     static const int LENGHT_LINE;
-    static const QString LOG_TEMPERATURE_TH_CROSSED_FILE_A;
-    static const QString LOG_TEMPERATURE_TH_CROSSED_FILE_B;
-    static const QString LOG_HUMIDITY_TH_CROSSED_FILE_A;
-    static const QString LOG_HUMIDITY_TH_CROSSED_FILE_B;
-    static const QString LOG_LUMINOSITY_TH_CROSSED_FILE_A;
-    static const QString LOG_LUMINOSITY_TH_CROSSED_FILE_B;
+    static const QString LOG_MIN_TEMPERATURE_TH_CROSSED_FILE_A;
+    static const QString LOG_MIN_TEMPERATURE_TH_CROSSED_FILE_B;
+    static const QString LOG_MIN_HUMIDITY_TH_CROSSED_FILE_A;
+    static const QString LOG_MIN_HUMIDITY_TH_CROSSED_FILE_B;
+    static const QString LOG_MIN_LUMINOSITY_TH_CROSSED_FILE_A;
+    static const QString LOG_MIN_LUMINOSITY_TH_CROSSED_FILE_B;
+
+    static const QString LOG_MAX_TEMPERATURE_TH_CROSSED_FILE_A;
+    static const QString LOG_MAX_TEMPERATURE_TH_CROSSED_FILE_B;
+    static const QString LOG_MAX_HUMIDITY_TH_CROSSED_FILE_A;
+    static const QString LOG_MAX_HUMIDITY_TH_CROSSED_FILE_B;
+    static const QString LOG_MAX_LUMINOSITY_TH_CROSSED_FILE_A;
+    static const QString LOG_MAX_LUMINOSITY_TH_CROSSED_FILE_B;
+
     static const QString LOG_TEMPERATURE_CURRENT_VALUE_FILE_A;
     static const QString LOG_TEMPERATURE_CURRENT_VALUE_FILE_B;
     static const QString LOG_HUMIDITY_CURRENT_VALUE_FILE_A;
@@ -35,7 +45,8 @@ public:
 private:
 
     void trunkateFile(QString filename);
-    QString getFileName(EVENT_TYPE_ENUM evtype);
+    QString getFileLogName(EVENT_TYPE_ENUM evtype);
+    void getFileNames(EVENT_TYPE_ENUM evtype, QString *filenamea, QString  *filenameb);
     QString mLogTemperatureThXFile;
     QString mLogHumidityThXFile;
     QString mLogLuminosityThXFile;
